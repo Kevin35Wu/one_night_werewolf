@@ -335,6 +335,133 @@
     return counts;
   }
 
+  function pushLog(game, text) {
+    if (!game || !text) return;
+    if (!game.log) game.log = [];
+    game.log.push({ phase: game.phase, text: String(text) });
+  }
+
+  function seatLabel(game, target) {
+    if (!game || !target) return "";
+    if (target.type === "center") {
+      const c = game.center[target.index];
+      if (!c) return "中間牌";
+      return c.alphaSlot ? "中間狼人" : "中" + (target.index + 1);
+    }
+    return game.players[target.index]?.name || "玩家";
+  }
+
+  function roleName(roleId) {
+    return D().ROLE_BY_ID[roleId]?.name || roleId;
+  }
+
+  function applyAction(game, action) {
+    if (!game || !action || !action.type) return { error: "無效操作" };
+    const roleNm = roleName;
+
+    if (action.type === "swap") {
+      const r = swapCards(game, action.a, action.b);
+      if (!r.error) pushLog(game, "換牌：" + seatLabel(game, action.a) + " ↔ " + seatLabel(game, action.b));
+      return r;
+    }
+    if (action.type === "flip") {
+      const r = flipCard(game, action.target);
+      if (!r.error) {
+        const card = getCard(game, action.target);
+        pushLog(
+          game,
+          (card.revealed ? "翻開：" : "蓋上：") + seatLabel(game, action.target) + "（" + roleNm(card.roleId) + "）"
+        );
+      }
+      return r;
+    }
+    if (action.type === "rotate") {
+      const who = game.players[action.selfIndex]?.name || "";
+      const r = rotatePlayerCards(game, action.selfIndex, action.direction);
+      if (!r.error) {
+        pushLog(game, (action.direction === 1 ? "輪轉向右" : "輪轉向左") + "（自己：" + who + "）");
+      }
+      return r;
+    }
+    if (action.type === "shield") {
+      const r = placeShield(game, action.playerIndex);
+      if (!r.error) pushLog(game, "放盾牌：" + game.players[action.playerIndex].name);
+      return r;
+    }
+    if (action.type === "placeMark") {
+      const player = game.players[action.playerIndex];
+      const old = player?.mark ? D().MARK_BY_ID[player.mark] : null;
+      const neu = D().MARK_BY_ID[action.markId];
+      const r = placeMark(game, action.playerIndex, action.markId);
+      if (!r.error) {
+        pushLog(
+          game,
+          "放標記：" +
+            player.name +
+            " ← " +
+            (neu ? neu.name : action.markId) +
+            (old ? "（原為" + old.name + "）" : "")
+        );
+      }
+      return r;
+    }
+    if (action.type === "swapMark") {
+      const r = swapMarks(game, action.aIndex, action.bIndex);
+      if (!r.error) {
+        pushLog(
+          game,
+          "換標記：" + game.players[action.aIndex].name + " ↔ " + game.players[action.bIndex].name
+        );
+      }
+      return r;
+    }
+    if (action.type === "placeArtifact") {
+      const name = game.players[action.playerIndex]?.name;
+      const r = placeArtifact(game, action.playerIndex);
+      if (!r.error) {
+        const art = D().ARTIFACT_BY_ID[game.players[action.playerIndex].artifact];
+        pushLog(game, art ? "放神器：" + name + " ← " + art.name : "放神器：" + name);
+      }
+      return r;
+    }
+    if (action.type === "look") {
+      const blocked = (action.targets || []).filter((t) => lookBlocked(game, t));
+      if (blocked.length) return { error: "有盾牌的牌不能看" };
+      const where = (action.targets || []).map((t) => seatLabel(game, t)).join("、");
+      const seen = (action.targets || [])
+        .map((t) => getCard(game, t))
+        .filter(Boolean)
+        .map((c) => roleNm(c.roleId))
+        .join("、");
+      pushLog(game, "看牌：" + where + " → " + seen);
+      return { error: null };
+    }
+    if (action.type === "lookMark") {
+      const p = game.players[action.playerIndex];
+      if (!p?.mark) return { error: "這位玩家沒有標記" };
+      const info = D().MARK_BY_ID[p.mark];
+      pushLog(game, "看標記：" + p.name + " → " + (info ? info.name : p.mark));
+      return { error: null };
+    }
+    if (action.type === "lookArtifact") {
+      const p = game.players[action.playerIndex];
+      if (!p?.artifact) return { error: "這位玩家沒有神器" };
+      const info = D().ARTIFACT_BY_ID[p.artifact];
+      pushLog(game, "看神器：" + p.name + " → " + (info ? info.name : p.artifact));
+      return { error: null };
+    }
+    if (action.type === "undo") {
+      if (!undo(game)) return { error: "沒有可還原的操作" };
+      pushLog(game, "還原上一步");
+      return { error: null };
+    }
+    if (action.type === "setPhase") {
+      game.phase = action.phase;
+      return { error: null };
+    }
+    return { error: "未知操作" };
+  }
+
   global.WerewolfGame = {
     shuffle,
     clone,
@@ -360,5 +487,8 @@
     swapMarks,
     placeArtifact,
     defaultCounts,
+    pushLog,
+    seatLabel,
+    applyAction,
   };
-})(window);
+})(typeof globalThis !== "undefined" ? globalThis : this);

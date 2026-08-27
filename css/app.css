@@ -132,6 +132,45 @@ img { max-width: 100%; }
   border-color: transparent;
 }
 .btn.ghost { background: transparent; }
+.room-code {
+  font-size: 2rem;
+  letter-spacing: 0.2em;
+  font-weight: 800;
+  color: var(--gold-2);
+  margin-top: 4px;
+}
+.room-code-input {
+  width: 7.5rem;
+  text-align: center;
+  letter-spacing: 0.25em;
+  font-size: 1.1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 10px 8px;
+}
+.room-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+.room-field input, .name-list input {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+.member-list {
+  margin: 10px 0 0;
+  padding-left: 1.2rem;
+}
+.member-list li { margin: 4px 0; }
 .btn.danger { border-color: rgba(224, 86, 86, 0.5); color: #ff8d8d; }
 .btn.done {
   background: linear-gradient(180deg, #4fd18a, #2ea86a);

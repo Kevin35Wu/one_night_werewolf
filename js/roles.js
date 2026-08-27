@@ -156,4 +156,4 @@
     MARK_BY_ID,
     ARTIFACT_BY_ID,
   };
-})(window);
+})(typeof globalThis !== "undefined" ? globalThis : this);
