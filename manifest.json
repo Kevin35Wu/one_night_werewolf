@@ -1,0 +1,18 @@
+{
+  "name": "一夜終極牌桌",
+  "short_name": "終極牌桌",
+  "description": "一夜終極系列單機換牌看牌",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#070b14",
+  "theme_color": "#070b14",
+  "lang": "zh-Hant",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
