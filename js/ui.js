@@ -35,6 +35,7 @@
     recapMode: "current",
     peek: null,
     modal: null,
+    rulesOpen: false,
   };
 
   function loadSetup() {
@@ -175,6 +176,7 @@
     state.tool = null;
     state.selected = [];
     state.peek = null;
+    state.rulesOpen = false;
     render();
   }
 
@@ -223,6 +225,7 @@
   function newGame() {
     state.screen = "setup";
     state.game = null;
+    state.rulesOpen = false;
     render();
   }
 
@@ -650,7 +653,8 @@
     const roles = Data.ROLES.filter((r) => r.expansion === state.expansion);
     return (
       '<section class="screen setup-screen">' +
-      '<div class="topbar"><div class="brand"><h1>一夜終極 · 牌桌</h1><div class="sub">語音用另一支 App，這裡只負責換牌看牌</div></div></div>' +
+      '<div class="topbar"><div class="brand"><h1>一夜終極 · 牌桌</h1><div class="sub">語音用另一支 App，這裡只負責換牌看牌</div></div>' +
+      '<button class="btn ghost" data-act="open-rules">規則書</button></div>' +
       '<div class="scroll-keep">' +
       '<div class="panel"><div class="row"><span class="label">玩家人數</span><div class="stepper">' +
       '<button data-act="count" data-d="-1">−</button><span class="count-num">' +
@@ -970,6 +974,20 @@
   function renderOverlay() {
     overlayEl.classList.add("hidden");
     overlayEl.innerHTML = "";
+    overlayEl.classList.remove("peek-overlay");
+    overlayEl.classList.remove("rules-overlay");
+
+    if (state.rulesOpen) {
+      overlayEl.classList.remove("hidden");
+      overlayEl.classList.add("rules-overlay");
+      overlayEl.innerHTML =
+        '<div class="rules-stack">' +
+        '<iframe class="rules-frame" src="rules.pdf" title="規則書"></iframe>' +
+        '<a class="rules-fallback" href="rules.pdf" target="_blank" rel="noopener">若無法顯示請點此另開規則書</a>' +
+        '<button class="btn primary big-btn" data-act="close-rules">關閉</button>' +
+        "</div>";
+      return;
+    }
 
     if (state.peek) {
       overlayEl.classList.remove("hidden");
@@ -982,7 +1000,6 @@
         "</div>";
       return;
     }
-    overlayEl.classList.remove("peek-overlay");
 
     if (state.screen === "table" && !state.tableUnlocked) {
       const dusk = state.game.phase === "dusk";
@@ -1067,6 +1084,13 @@
     } else if (act === "set") toggleSetting(ds.key);
     else if (act === "art") toggleArtifact(ds.id);
     else if (act === "deal") startGame();
+    else if (act === "open-rules") {
+      state.rulesOpen = true;
+      render();
+    } else if (act === "close-rules") {
+      state.rulesOpen = false;
+      render();
+    }
     else if (act === "open-view") {
       state.viewOpen = true;
       render();
