@@ -189,7 +189,15 @@
     if (!Net.send({ type: "action", action })) toast("尚未連線");
   }
 
+  function isArrange() {
+    return !!(state.game && state.game.phase === "arrange");
+  }
+
   function showMyCard() {
+    if (isArrange()) {
+      toast("先換完牌，再按開始看牌");
+      return;
+    }
     const i = mySeatIndex();
     if (i < 0 || !state.game) {
       toast("找不到你的座位");
@@ -212,6 +220,10 @@
   }
 
   function showMyMark() {
+    if (isArrange()) {
+      toast("先換完牌，再按開始看牌");
+      return;
+    }
     const i = mySeatIndex();
     if (i < 0 || !state.game) {
       toast("找不到你的座位");
@@ -340,14 +352,30 @@
       return;
     }
     state.game = result.game;
-    state.screen = "viewCards";
+    state.game.phase = "arrange";
+    state.screen = "table";
     state.viewIndex = 0;
     state.viewOpen = false;
-    state.tableUnlocked = false;
+    state.tableUnlocked = true;
     state.tool = null;
     state.selected = [];
     state.peek = null;
     state.rulesOpen = false;
+    render();
+  }
+
+  function beginLook() {
+    if (state.online) {
+      const next = state.game.settings.dusk ? "dusk" : "night";
+      sendAction({ type: "setPhase", phase: next });
+      return;
+    }
+    state.screen = "viewCards";
+    state.viewIndex = 0;
+    state.viewOpen = false;
+    state.tool = null;
+    state.selected = [];
+    state.peek = null;
     render();
   }
 
@@ -610,6 +638,10 @@
     const sel = state.selected;
     if (state.screen === "day" && id !== "lookArtifact") {
       toast("白天不能再動牌");
+      return;
+    }
+    if (isArrange() && id !== "swap") {
+      toast("現在只能換牌");
       return;
     }
     if (id === "swap" && state.online) {
@@ -1193,6 +1225,9 @@
     if (state.tool === "rotate") return "已選自己的座位，再選向左或向右。";
     if (state.tool === "placeMark") return "已選玩家，再選要放上的標記。";
     if (state.online && state.tool === "swap") return "再點對方或中間的牌，與自己對調。若已選兩張則對調那兩張。";
+    if (isArrange()) return state.online
+      ? "發牌後可先換牌。先按換牌，再點要和自己對調的那張。"
+      : "發牌後可先換牌。請先點兩張再按換牌。";
     if (state.online && !n) return "先點牌再選功能。換牌可先按換牌，再點要和自己對調的那張。";
     if (!n) return "先點牌，再選下面的功能。按完成可取消選取。";
     return "已選 " + n + " 張，再選要做的事。再點一次即可取消。";
@@ -1200,17 +1235,22 @@
 
   function renderTable() {
     const g = state.game;
+    const arrange = g.phase === "arrange";
     const dusk = g.phase === "dusk";
-    const phaseName = dusk ? "黃昏" : "黑夜";
+    const phaseName = arrange ? "發牌後" : dusk ? "黃昏" : "黑夜";
     const tools = [];
-    tools.push(toolBtn("look", "看牌"), toolBtn("swap", "換牌"), toolBtn("rotate", "輪轉"), toolBtn("flip", "翻開／蓋上"));
-    if (g.settings.dusk) {
-      tools.push(toolBtn("placeMark", "放標記"), toolBtn("lookMark", "看標記"), toolBtn("swapMark", "換標記"));
+    if (arrange) {
+      tools.push(toolBtn("swap", "換牌"));
+    } else {
+      tools.push(toolBtn("look", "看牌"), toolBtn("swap", "換牌"), toolBtn("rotate", "輪轉"), toolBtn("flip", "翻開／蓋上"));
+      if (g.settings.dusk) {
+        tools.push(toolBtn("placeMark", "放標記"), toolBtn("lookMark", "看標記"), toolBtn("swapMark", "換標記"));
+      }
+      if (g.settings.artifacts) {
+        tools.push(toolBtn("placeArtifact", "放神器"), toolBtn("lookArtifact", "看神器"));
+      }
+      if (g.settings.shield) tools.push(toolBtn("shield", "放盾牌"));
     }
-    if (g.settings.artifacts) {
-      tools.push(toolBtn("placeArtifact", "放神器"), toolBtn("lookArtifact", "看神器"));
-    }
-    if (g.settings.shield) tools.push(toolBtn("shield", "放盾牌"));
 
     let extra = "";
     if (state.tool === "placeMark") {
@@ -1243,20 +1283,25 @@
         "</div>";
     }
 
-    const nextLabel = dusk ? "結束黃昏" : "天亮了";
-    const nextAct = dusk ? "end-dusk" : "end-night";
+    const nextLabel = arrange ? "開始看牌" : dusk ? "結束黃昏" : "天亮了";
+    const nextAct = arrange ? "begin-look" : dusk ? "end-dusk" : "end-night";
     const deckNote = g.settings.artifacts ? "神器堆剩 " + g.artifactDeck.length + " 枚" : "";
+    const title = arrange ? "先換牌" : "跟著語音操作";
+    const sub = arrange
+      ? (state.online ? "房號 " + escapeHtml(state.joinCode) + "　還沒看牌，可先對調" : "還沒看牌，可先對調座位上的牌")
+      : (state.online ? "房號 " + escapeHtml(state.joinCode) + "　" : "") + deckNote;
 
     return (
       '<section class="screen table-screen"><div class="topbar"><div class="brand"><div class="phase-tag">' +
       phaseName +
-      '桌面</div><h1>跟著語音操作</h1><div class="sub">' +
-      (state.online ? "房號 " + escapeHtml(state.joinCode) + "　" : "") +
-      deckNote +
+      "桌面</div><h1>" +
+      title +
+      '</h1><div class="sub">' +
+      sub +
       "</div></div>" +
       '<div class="row" style="gap:6px">' +
-      (state.online ? '<button class="btn ghost" data-act="my-card">我的牌</button>' : "") +
-      (state.online && g.settings.dusk ? '<button class="btn ghost" data-act="my-mark">我的標記</button>' : "") +
+      (state.online && !arrange ? '<button class="btn ghost" data-act="my-card">我的牌</button>' : "") +
+      (state.online && !arrange && g.settings.dusk ? '<button class="btn ghost" data-act="my-mark">我的標記</button>' : "") +
       '<button class="btn ghost" data-act="undo">還原</button></div></div>' +
       '<div class="table-wrap">' +
       renderBoard({ showRevealed: true, showTokens: true, revealSecrets: false }) +
@@ -1270,7 +1315,9 @@
       tools.join("") +
       "</div>" +
       '<div class="table-actions"><button class="btn done" data-act="lock-phone">完成</button>' +
-      '<button class="btn danger" data-act="' +
+      '<button class="btn ' +
+      (arrange ? "primary" : "danger") +
+      '" data-act="' +
       nextAct +
       '">' +
       nextLabel +
@@ -1298,7 +1345,7 @@
 
   function renderLog() {
     const log = state.game.log || [];
-    const phaseName = { dusk: "黃昏", night: "黑夜", day: "白天" };
+    const phaseName = { arrange: "發牌後", dusk: "黃昏", night: "黑夜", day: "白天" };
     if (!log.length) {
       return '<div class="panel log-panel"><div class="label">操作紀錄</div><div class="tiny">這一局沒有留下操作</div></div>';
     }
@@ -1369,7 +1416,7 @@
       return;
     }
 
-    if (state.screen === "table" && !state.tableUnlocked && !state.online) {
+    if (state.screen === "table" && !state.tableUnlocked && !state.online && !isArrange()) {
       const dusk = state.game.phase === "dusk";
       overlayEl.classList.remove("hidden");
       overlayEl.innerHTML =
@@ -1535,6 +1582,8 @@
         toast("已還原上一步");
         render();
       } else toast("沒有可還原的操作");
+    } else if (act === "begin-look") {
+      ask("開始看牌？", "之後就不能在看牌前再換了。", beginLook);
     } else if (act === "end-dusk") {
       ask("結束黃昏？", state.online ? "接下來進入黑夜。每人可按「我的標記」查看。" : "接下來會傳手機讓大家看自己的標記。", finishDusk);
     } else if (act === "end-night") {

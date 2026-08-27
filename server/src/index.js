@@ -246,7 +246,7 @@ export class Room {
         return;
       }
       result.game.seatIds = data.members.map((m) => m.id);
-      result.game.phase = result.game.settings.dusk ? "dusk" : "night";
+      result.game.phase = "arrange";
       data.game = result.game;
       data.screen = "table";
       await this.save(data);

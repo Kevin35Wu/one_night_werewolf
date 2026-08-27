@@ -144,7 +144,7 @@
         original,
         history: [],
         log: [],
-        phase: "viewCards",
+        phase: "arrange",
       },
     };
   }
@@ -359,6 +359,9 @@
     if (!game || !action || !action.type) return { error: "無效操作" };
     const roleNm = roleName;
 
+    if (game.phase === "arrange" && action.type !== "swap" && action.type !== "undo" && action.type !== "setPhase") {
+      return { error: "現在只能換牌" };
+    }
     if (action.type === "swap") {
       const r = swapCards(game, action.a, action.b);
       if (!r.error) pushLog(game, "換牌：" + seatLabel(game, action.a) + " ↔ " + seatLabel(game, action.b));
