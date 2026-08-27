@@ -486,6 +486,8 @@ img { max-width: 100%; }
 .table-circle.seats-12 .seat-orbit { width: 18%; }
 .seat.selected { border-color: var(--gold-2); box-shadow: 0 0 0 2px rgba(212,175,90,0.25); }
 .seat.shielded { border-color: #7ec8ff; }
+.seat.seat-mine { border-color: var(--gold); }
+.seat.seat-mine .who { color: var(--gold-2); font-weight: 700; }
 .seat .who { font-size: 0.75rem; color: var(--muted); margin-bottom: 6px; }
 .seat.face-public .who { color: var(--gold-2); }
 

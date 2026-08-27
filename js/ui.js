@@ -526,11 +526,70 @@
     render();
   }
 
+  function mySeatTarget() {
+    const i = mySeatIndex();
+    if (i < 0) return null;
+    return { type: "player", index: i };
+  }
+
+  function isMySeat(t) {
+    return !!(t && t.type === "player" && t.index === mySeatIndex());
+  }
+
+  function performSwap(a, b) {
+    if (state.online) {
+      sendAction({ type: "swap", a: a, b: b });
+      state.selected = [];
+      state.tool = null;
+      render();
+      return;
+    }
+    applyResult(
+      Game.swapCards(state.game, a, b),
+      "已換牌",
+      "換牌：" + seatLabel(a) + " ↔ " + seatLabel(b)
+    );
+  }
+
+  function startOrDoOnlineSwap() {
+    const me = mySeatTarget();
+    if (!me) {
+      toast("找不到你的座位");
+      return;
+    }
+    const sel = state.selected;
+    if (sel.length === 2) {
+      performSwap(sel[0], sel[1]);
+      return;
+    }
+    if (sel.length === 1 && !isMySeat(sel[0])) {
+      performSwap(me, sel[0]);
+      return;
+    }
+    state.tool = "swap";
+    if (sel.length === 1 && isMySeat(sel[0])) state.selected = [];
+    render();
+  }
+
   function onSeatTap(type, index) {
     if (state.screen === "recap" || state.screen === "setup") return;
     if (state.screen === "table" && !state.tableUnlocked && !state.online) return;
     if (state.screen !== "table" && state.screen !== "day") return;
-    toggleSelect({ type, index });
+    const t = { type, index };
+    if (state.online && state.tool === "swap" && state.screen === "table") {
+      if (isMySeat(t)) {
+        toast("請點對方或中間的牌");
+        return;
+      }
+      const me = mySeatTarget();
+      if (!me) {
+        toast("找不到你的座位");
+        return;
+      }
+      performSwap(me, t);
+      return;
+    }
+    toggleSelect(t);
     if (state.tool === "rotate") {
       const p = onePlayer();
       if (p) state.rotateSelf = p.index;
@@ -553,6 +612,10 @@
       toast("白天不能再動牌");
       return;
     }
+    if (id === "swap" && state.online) {
+      startOrDoOnlineSwap();
+      return;
+    }
     if (!sel.length) {
       toast("請先點牌，再選功能");
       return;
@@ -565,13 +628,6 @@
     if (id === "swap") {
       if (sel.length !== 2) {
         toast("換牌請先點兩張牌");
-        return;
-      }
-      if (state.online) {
-        sendAction({ type: "swap", a: sel[0], b: sel[1] });
-        state.selected = [];
-        state.tool = null;
-        render();
         return;
       }
       applyResult(
@@ -813,6 +869,7 @@
       (selected ? " selected" : "") +
       (snap.shielded ? " shielded" : "") +
       (showFace ? " face-public" : "") +
+      (extra.mine ? " seat-mine" : "") +
       (extra.className ? " " + extra.className : "") +
       '" data-act="seat" data-type="' +
       (kind === "center" ? "center" : "player") +
@@ -868,14 +925,18 @@
     });
     html += "</div>";
 
+    const my = state.online ? mySeatIndex() : -1;
     snap.players.forEach((p, i) => {
-      const deg = -90 + (360 / n) * i;
+      const mine = my >= 0 && i === my;
+      const offset = my >= 0 ? (i - my + n) % n : i;
+      const deg = (my >= 0 ? 90 : -90) + (360 / n) * offset;
       const rad = (deg * Math.PI) / 180;
       const x = 50 + ring * Math.cos(rad);
       const y = 50 + ring * Math.sin(rad);
       html += renderSeatFromSnap("player", i, p, {
         ...extraBase,
-        label: p.name,
+        mine: mine,
+        label: mine ? p.name + "（你）" : p.name,
         className: "seat-orbit",
         style: "left:" + x.toFixed(2) + "%;top:" + y.toFixed(2) + "%",
       });
@@ -1131,6 +1192,8 @@
     const n = state.selected.length;
     if (state.tool === "rotate") return "已選自己的座位，再選向左或向右。";
     if (state.tool === "placeMark") return "已選玩家，再選要放上的標記。";
+    if (state.online && state.tool === "swap") return "再點對方或中間的牌，與自己對調。若已選兩張則對調那兩張。";
+    if (state.online && !n) return "先點牌再選功能。換牌可先按換牌，再點要和自己對調的那張。";
     if (!n) return "先點牌，再選下面的功能。按完成可取消選取。";
     return "已選 " + n + " 張，再選要做的事。再點一次即可取消。";
   }
