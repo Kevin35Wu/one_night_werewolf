@@ -1120,32 +1120,6 @@
     const winnerLabel = winners.map((w) => w.label).join("、");
     const winner = winners[0] ? winners[0].id : "village";
 
-    // #region agent log
-    if (typeof fetch === "function") {
-      fetch("http://127.0.0.1:7369/ingest/6228a8cb-e43d-48e3-b6e2-032cd21d51be", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "730a37" },
-        body: JSON.stringify({
-          sessionId: "730a37",
-          runId: "win-resolve",
-          hypothesisId: "W1",
-          location: "game.js:resolveVotes",
-          message: "vote resolved",
-          data: {
-            evilCount: evilCount,
-            evils: evils,
-            eliminated: eliminated,
-            hunterChain: hunterChain,
-            dead: dead,
-            winners: winners,
-            immune: redirected.immune,
-          },
-          timestamp: Date.now(),
-        }),
-      }).catch(function () {});
-    }
-    // #endregion
-
     game.phase = "recap";
     game.voteResult = {
       counts: counts,

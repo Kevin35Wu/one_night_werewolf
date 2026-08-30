@@ -42,45 +42,7 @@
       create: intent.create ? "1" : "0",
     });
     const url = String(base).replace(/\/$/, "") + "/room/" + encodeURIComponent(intent.code) + "?" + q;
-    // #region agent log
-    fetch("http://127.0.0.1:7369/ingest/6228a8cb-e43d-48e3-b6e2-032cd21d51be", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "730a37" },
-      body: JSON.stringify({
-        sessionId: "730a37",
-        runId: "post-fix",
-        hypothesisId: "A",
-        location: "js/net.js:openSocket",
-        message: "ws connect attempt",
-        data: {
-          hostname: (global.location && location.hostname) || "",
-          href: (global.location && location.href) || "",
-          wsBase: base,
-          url: url,
-          create: !!intent.create,
-          code: intent.code || "",
-          hasClientId: !!(intent.clientId && String(intent.clientId).length),
-        },
-        timestamp: Date.now(),
-      }),
-    }).catch(function () {});
-    // #endregion
     if (!intent.clientId) {
-      // #region agent log
-      fetch("http://127.0.0.1:7369/ingest/6228a8cb-e43d-48e3-b6e2-032cd21d51be", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "730a37" },
-        body: JSON.stringify({
-          sessionId: "730a37",
-          runId: "post-fix",
-          hypothesisId: "A",
-          location: "js/net.js:openSocket.emptyClientId",
-          message: "abort connect: empty clientId",
-          data: { code: intent.code || "", create: !!intent.create },
-          timestamp: Date.now(),
-        }),
-      }).catch(function () {});
-      // #endregion
       const err = intent.onError;
       intent = null;
       if (err) err("缺少玩家識別，請重新整理頁面");
@@ -90,42 +52,12 @@
     try {
       socket = new WebSocket(url);
     } catch (err) {
-      // #region agent log
-      fetch("http://127.0.0.1:7369/ingest/6228a8cb-e43d-48e3-b6e2-032cd21d51be", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "730a37" },
-        body: JSON.stringify({
-          sessionId: "730a37",
-          runId: "post-fix",
-          hypothesisId: "D",
-          location: "js/net.js:openSocket.catch",
-          message: "WebSocket constructor threw",
-          data: { err: String(err && err.message ? err.message : err), url: url },
-          timestamp: Date.now(),
-        }),
-      }).catch(function () {});
-      // #endregion
       if (intent.onError) intent.onError("連線失敗");
       scheduleReconnect();
       return;
     }
     ws = socket;
     socket.addEventListener("open", () => {
-      // #region agent log
-      fetch("http://127.0.0.1:7369/ingest/6228a8cb-e43d-48e3-b6e2-032cd21d51be", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "730a37" },
-        body: JSON.stringify({
-          sessionId: "730a37",
-          runId: "post-fix",
-          hypothesisId: "E",
-          location: "js/net.js:open",
-          message: "ws open",
-          data: { url: url },
-          timestamp: Date.now(),
-        }),
-      }).catch(function () {});
-      // #endregion
       reconnectAttempt = 0;
       intent.create = false;
       pingTimer = setInterval(() => {
@@ -162,40 +94,10 @@
         if (closed) closed({ fatal: true, code: code });
         return;
       }
-      // #region agent log
-      fetch("http://127.0.0.1:7369/ingest/6228a8cb-e43d-48e3-b6e2-032cd21d51be", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "730a37" },
-        body: JSON.stringify({
-          sessionId: "730a37",
-          runId: "post-fix",
-          hypothesisId: "E",
-          location: "js/net.js:close",
-          message: "ws close",
-          data: { code: code, reason: (ev && ev.reason) || "", wasClean: !!(ev && ev.wasClean), url: url },
-          timestamp: Date.now(),
-        }),
-      }).catch(function () {});
-      // #endregion
       if (intent.onDisconnected) intent.onDisconnected();
       scheduleReconnect();
     });
     socket.addEventListener("error", () => {
-      // #region agent log
-      fetch("http://127.0.0.1:7369/ingest/6228a8cb-e43d-48e3-b6e2-032cd21d51be", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "730a37" },
-        body: JSON.stringify({
-          sessionId: "730a37",
-          runId: "post-fix",
-          hypothesisId: "A",
-          location: "js/net.js:error",
-          message: "ws error event",
-          data: { url: url, reconnectAttempt: reconnectAttempt, readyState: socket.readyState },
-          timestamp: Date.now(),
-        }),
-      }).catch(function () {});
-      // #endregion
       if (intent && intent.onError && reconnectAttempt === 0) {
         intent.onError("連線失敗，請確認房間伺服器已開啟");
       }
