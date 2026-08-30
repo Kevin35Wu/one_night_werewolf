@@ -1,0 +1,1023 @@
+{
+  "source": "一夜終極系列中文語音-arm64.apk",
+  "pauseTimeMs": 5000,
+  "doubleComplexRoles": true,
+  "notes": "delayMs is the APK role-timer pause after the clip (close/thumb shorter). holdMs in script.js = durationMs + delayMs.",
+  "steps": [
+    {
+      "id": "everyone-close",
+      "clip": "everyone_close",
+      "file": "everyone-close.mp3",
+      "durationMs": 2717,
+      "delayMs": 1500
+    },
+    {
+      "id": "copycat-wake",
+      "clip": "copycat_wake",
+      "file": "copycat-wake.mp3",
+      "durationMs": 11938,
+      "delayMs": 5000
+    },
+    {
+      "id": "copycat-close",
+      "clip": "copycat_close",
+      "file": "copycat-close.mp3",
+      "durationMs": 2664,
+      "delayMs": 800
+    },
+    {
+      "id": "vampire-wake",
+      "clip": "vampire_wake",
+      "file": "vampire-wake.mp3",
+      "durationMs": 7523,
+      "delayMs": 5000
+    },
+    {
+      "id": "vampire-close",
+      "clip": "vampire_close",
+      "file": "vampire-close.mp3",
+      "durationMs": 2586,
+      "delayMs": 800
+    },
+    {
+      "id": "vampire-renfield-close",
+      "clip": "vampire_renfield_close",
+      "file": "vampire-renfield-close.mp3",
+      "durationMs": 6818,
+      "delayMs": 800
+    },
+    {
+      "id": "count-wake",
+      "clip": "count_wake",
+      "file": "count-wake.mp3",
+      "durationMs": 7288,
+      "delayMs": 5000
+    },
+    {
+      "id": "count-close",
+      "clip": "count_close",
+      "file": "count-close.mp3",
+      "durationMs": 2168,
+      "delayMs": 800
+    },
+    {
+      "id": "renfield-wake",
+      "clip": "renfield_wake",
+      "file": "renfield-wake.mp3",
+      "durationMs": 6818,
+      "delayMs": 5000
+    },
+    {
+      "id": "vampire-renfield-handsaway",
+      "clip": "vampire_renfield_handsaway",
+      "file": "vampire-renfield-handsaway.mp3",
+      "durationMs": 2664,
+      "delayMs": 1200
+    },
+    {
+      "id": "renfield-close",
+      "clip": "renfield_close",
+      "file": "renfield-close.mp3",
+      "durationMs": 2325,
+      "delayMs": 800
+    },
+    {
+      "id": "diseased-wake",
+      "clip": "diseased_wake",
+      "file": "diseased-wake.mp3",
+      "durationMs": 7784,
+      "delayMs": 5000
+    },
+    {
+      "id": "diseased-close",
+      "clip": "diseased_close",
+      "file": "diseased-close.mp3",
+      "durationMs": 3213,
+      "delayMs": 800
+    },
+    {
+      "id": "cupid-wake",
+      "clip": "cupid_wake",
+      "file": "cupid-wake.mp3",
+      "durationMs": 6269,
+      "delayMs": 10000
+    },
+    {
+      "id": "cupid-close",
+      "clip": "cupid_close",
+      "file": "cupid-close.mp3",
+      "durationMs": 2560,
+      "delayMs": 800
+    },
+    {
+      "id": "instigator-wake",
+      "clip": "instigator_wake",
+      "file": "instigator-wake.mp3",
+      "durationMs": 6740,
+      "delayMs": 5000
+    },
+    {
+      "id": "instigator-close",
+      "clip": "instigator_close",
+      "file": "instigator-close.mp3",
+      "durationMs": 2717,
+      "delayMs": 800
+    },
+    {
+      "id": "priest-wake",
+      "clip": "priest_wake",
+      "file": "priest-wake.mp3",
+      "durationMs": 8908,
+      "delayMs": 10000
+    },
+    {
+      "id": "priest-close",
+      "clip": "priest_close",
+      "file": "priest-close.mp3",
+      "durationMs": 2247,
+      "delayMs": 800
+    },
+    {
+      "id": "assassin-wake",
+      "clip": "assassin_wake",
+      "file": "assassin-wake.mp3",
+      "durationMs": 5930,
+      "delayMs": 5000
+    },
+    {
+      "id": "appassassin-assassin-wake",
+      "clip": "appassassin_assassin_wake",
+      "file": "appassassin-assassin-wake.mp3",
+      "durationMs": 8594,
+      "delayMs": 5000
+    },
+    {
+      "id": "appassassin-wake",
+      "clip": "appassassin_wake",
+      "file": "appassassin-wake.mp3",
+      "durationMs": 6426,
+      "delayMs": 5000
+    },
+    {
+      "id": "assassin-appassassin-close",
+      "clip": "assassin_appassassin_close",
+      "file": "assassin-appassassin-close.mp3",
+      "durationMs": 3866,
+      "delayMs": 800
+    },
+    {
+      "id": "assassin-close",
+      "clip": "assassin_close",
+      "file": "assassin-close.mp3",
+      "durationMs": 2273,
+      "delayMs": 800
+    },
+    {
+      "id": "appassassin-close",
+      "clip": "appassassin_close",
+      "file": "appassassin-close.mp3",
+      "durationMs": 2978,
+      "delayMs": 800
+    },
+    {
+      "id": "lovers-wake",
+      "clip": "lovers_wake",
+      "file": "lovers-wake.mp3",
+      "durationMs": 5799,
+      "delayMs": 5000
+    },
+    {
+      "id": "lovers-close",
+      "clip": "lovers_close",
+      "file": "lovers-close.mp3",
+      "durationMs": 2351,
+      "delayMs": 800
+    },
+    {
+      "id": "everyone-dusk",
+      "clip": "everyone_dusk",
+      "file": "everyone-dusk.mp3",
+      "durationMs": 4493,
+      "delayMs": 1500
+    },
+    {
+      "id": "everyone-wiggle",
+      "clip": "everyone_wiggle",
+      "file": "everyone-wiggle.mp3",
+      "durationMs": 6087,
+      "delayMs": 1500
+    },
+    {
+      "id": "sentinel-wake",
+      "clip": "sentinel_wake",
+      "file": "sentinel-wake.mp3",
+      "durationMs": 9744,
+      "delayMs": 5000
+    },
+    {
+      "id": "sentinel-close",
+      "clip": "sentinel_close",
+      "file": "sentinel-close.mp3",
+      "durationMs": 2377,
+      "delayMs": 800
+    },
+    {
+      "id": "doppelganger-wake",
+      "clip": "doppelganger_wake",
+      "file": "doppelganger-wake.mp3",
+      "durationMs": 13009,
+      "delayMs": 10000
+    },
+    {
+      "id": "doppelganger-close",
+      "clip": "doppelganger_close",
+      "file": "doppelganger-close.mp3",
+      "durationMs": 3030,
+      "delayMs": 800
+    },
+    {
+      "id": "werewolf-dreamwolf-wake",
+      "clip": "werewolf_dreamwolf_wake",
+      "file": "werewolf-dreamwolf-wake.mp3",
+      "durationMs": 9169,
+      "delayMs": 5000
+    },
+    {
+      "id": "werewolf-wake",
+      "clip": "werewolf_wake",
+      "file": "werewolf-wake.mp3",
+      "durationMs": 4258,
+      "delayMs": 5000
+    },
+    {
+      "id": "werewolf-dreamwolf-thumb",
+      "clip": "werewolf_dreamwolf_thumb",
+      "file": "werewolf-dreamwolf-thumb.mp3",
+      "durationMs": 3030,
+      "delayMs": 1200
+    },
+    {
+      "id": "werewolf-lonewolf-option",
+      "clip": "werewolf_lonewolf_option",
+      "file": "werewolf-lonewolf-option.mp3",
+      "durationMs": 5590,
+      "delayMs": 5000
+    },
+    {
+      "id": "alphawolf-wake",
+      "clip": "alphawolf_wake",
+      "file": "alphawolf-wake.mp3",
+      "durationMs": 7915,
+      "delayMs": 5000
+    },
+    {
+      "id": "alphawolf-close",
+      "clip": "alphawolf_close",
+      "file": "alphawolf-close.mp3",
+      "durationMs": 2821,
+      "delayMs": 800
+    },
+    {
+      "id": "mysticwolf-wake",
+      "clip": "mysticwolf_wake",
+      "file": "mysticwolf-wake.mp3",
+      "durationMs": 6139,
+      "delayMs": 5000
+    },
+    {
+      "id": "mysticwolf-close",
+      "clip": "mysticwolf_close",
+      "file": "mysticwolf-close.mp3",
+      "durationMs": 2769,
+      "delayMs": 800
+    },
+    {
+      "id": "werewolf-close",
+      "clip": "werewolf_close",
+      "file": "werewolf-close.mp3",
+      "durationMs": 2351,
+      "delayMs": 800
+    },
+    {
+      "id": "minion-wake",
+      "clip": "minion_wake",
+      "file": "minion-wake.mp3",
+      "durationMs": 6844,
+      "delayMs": 5000
+    },
+    {
+      "id": "minion-thumb",
+      "clip": "minion_thumb",
+      "file": "minion-thumb.mp3",
+      "durationMs": 2821,
+      "delayMs": 1200
+    },
+    {
+      "id": "minion-close",
+      "clip": "minion_close",
+      "file": "minion-close.mp3",
+      "durationMs": 2220,
+      "delayMs": 800
+    },
+    {
+      "id": "mason-wake",
+      "clip": "mason_wake",
+      "file": "mason-wake.mp3",
+      "durationMs": 4859,
+      "delayMs": 5000
+    },
+    {
+      "id": "mason-close",
+      "clip": "mason_close",
+      "file": "mason-close.mp3",
+      "durationMs": 2821,
+      "delayMs": 800
+    },
+    {
+      "id": "seer-wake",
+      "clip": "seer_wake",
+      "file": "seer-wake.mp3",
+      "durationMs": 8046,
+      "delayMs": 5000
+    },
+    {
+      "id": "seer-close",
+      "clip": "seer_close",
+      "file": "seer-close.mp3",
+      "durationMs": 2638,
+      "delayMs": 800
+    },
+    {
+      "id": "appseer-wake",
+      "clip": "appseer_wake",
+      "file": "appseer-wake.mp3",
+      "durationMs": 6034,
+      "delayMs": 5000
+    },
+    {
+      "id": "appseer-close",
+      "clip": "appseer_close",
+      "file": "appseer-close.mp3",
+      "durationMs": 3265,
+      "delayMs": 800
+    },
+    {
+      "id": "pi-wake",
+      "clip": "pi_wake",
+      "file": "pi-wake.mp3",
+      "durationMs": 15386,
+      "delayMs": 5000
+    },
+    {
+      "id": "pi-close",
+      "clip": "pi_close",
+      "file": "pi-close.mp3",
+      "durationMs": 2926,
+      "delayMs": 800
+    },
+    {
+      "id": "robber-wake",
+      "clip": "robber_wake",
+      "file": "robber-wake.mp3",
+      "durationMs": 8725,
+      "delayMs": 5000
+    },
+    {
+      "id": "robber-close",
+      "clip": "robber_close",
+      "file": "robber-close.mp3",
+      "durationMs": 2325,
+      "delayMs": 800
+    },
+    {
+      "id": "witch-wake",
+      "clip": "witch_wake",
+      "file": "witch-wake.mp3",
+      "durationMs": 10136,
+      "delayMs": 5000
+    },
+    {
+      "id": "witch-close",
+      "clip": "witch_close",
+      "file": "witch-close.mp3",
+      "durationMs": 2220,
+      "delayMs": 800
+    },
+    {
+      "id": "troublemaker-wake",
+      "clip": "troublemaker_wake",
+      "file": "troublemaker-wake.mp3",
+      "durationMs": 6296,
+      "delayMs": 5000
+    },
+    {
+      "id": "troublemaker-close",
+      "clip": "troublemaker_close",
+      "file": "troublemaker-close.mp3",
+      "durationMs": 2664,
+      "delayMs": 800
+    },
+    {
+      "id": "vidiot-wake",
+      "clip": "vidiot_wake",
+      "file": "vidiot-wake.mp3",
+      "durationMs": 9456,
+      "delayMs": 10000
+    },
+    {
+      "id": "vidiot-close",
+      "clip": "vidiot_close",
+      "file": "vidiot-close.mp3",
+      "durationMs": 3056,
+      "delayMs": 800
+    },
+    {
+      "id": "drunk-wake",
+      "clip": "drunk_wake",
+      "file": "drunk-wake.mp3",
+      "durationMs": 5669,
+      "delayMs": 5000
+    },
+    {
+      "id": "drunk-close",
+      "clip": "drunk_close",
+      "file": "drunk-close.mp3",
+      "durationMs": 2247,
+      "delayMs": 800
+    },
+    {
+      "id": "insomniac-wake",
+      "clip": "insomniac_wake",
+      "file": "insomniac-wake.mp3",
+      "durationMs": 4180,
+      "delayMs": 5000
+    },
+    {
+      "id": "insomniac-close",
+      "clip": "insomniac_close",
+      "file": "insomniac-close.mp3",
+      "durationMs": 2769,
+      "delayMs": 800
+    },
+    {
+      "id": "revealer-wake",
+      "clip": "revealer_wake",
+      "file": "revealer-wake.mp3",
+      "durationMs": 10057,
+      "delayMs": 5000
+    },
+    {
+      "id": "revealer-close",
+      "clip": "revealer_close",
+      "file": "revealer-close.mp3",
+      "durationMs": 2612,
+      "delayMs": 800
+    },
+    {
+      "id": "curator-wake",
+      "clip": "curator_wake",
+      "file": "curator-wake.mp3",
+      "durationMs": 9143,
+      "delayMs": 5000
+    },
+    {
+      "id": "curator-close",
+      "clip": "curator_close",
+      "file": "curator-close.mp3",
+      "durationMs": 2560,
+      "delayMs": 800
+    },
+    {
+      "id": "thing-wake",
+      "clip": "thing_wake",
+      "file": "thing-wake.mp3",
+      "durationMs": 6557,
+      "delayMs": 5000
+    },
+    {
+      "id": "thing-close",
+      "clip": "thing_close",
+      "file": "thing-close.mp3",
+      "durationMs": 2168,
+      "delayMs": 800
+    },
+    {
+      "id": "squire-wake",
+      "clip": "squire_wake",
+      "file": "squire-wake.mp3",
+      "durationMs": 10057,
+      "delayMs": 10000
+    },
+    {
+      "id": "squire-ww-thumb",
+      "clip": "squire_ww_thumb",
+      "file": "squire-ww-thumb.mp3",
+      "durationMs": 2821,
+      "delayMs": 1200
+    },
+    {
+      "id": "squire-close",
+      "clip": "squire_close",
+      "file": "squire-close.mp3",
+      "durationMs": 2403,
+      "delayMs": 800
+    },
+    {
+      "id": "beholder-seer-appseer-wake",
+      "clip": "beholder_seer_appseer_wake",
+      "file": "beholder-seer-appseer-wake.mp3",
+      "durationMs": 12617,
+      "delayMs": 10000
+    },
+    {
+      "id": "beholder-seer-wake",
+      "clip": "beholder_seer_wake",
+      "file": "beholder-seer-wake.mp3",
+      "durationMs": 9117,
+      "delayMs": 10000
+    },
+    {
+      "id": "beholder-appseer-wake",
+      "clip": "beholder_appseer_wake",
+      "file": "beholder-appseer-wake.mp3",
+      "durationMs": 10083,
+      "delayMs": 10000
+    },
+    {
+      "id": "beholder-seer-appseer-thumb",
+      "clip": "beholder_seer_appseer_thumb",
+      "file": "beholder-seer-appseer-thumb.mp3",
+      "durationMs": 4728,
+      "delayMs": 1200
+    },
+    {
+      "id": "beholder-seer-thumb",
+      "clip": "beholder_seer_thumb",
+      "file": "beholder-seer-thumb.mp3",
+      "durationMs": 3004,
+      "delayMs": 1200
+    },
+    {
+      "id": "beholder-appseer-thumb",
+      "clip": "beholder_appseer_thumb",
+      "file": "beholder-appseer-thumb.mp3",
+      "durationMs": 3631,
+      "delayMs": 1200
+    },
+    {
+      "id": "beholder-close",
+      "clip": "beholder_close",
+      "file": "beholder-close.mp3",
+      "durationMs": 2717,
+      "delayMs": 800
+    },
+    {
+      "id": "marksman-wake",
+      "clip": "marksman_wake",
+      "file": "marksman-wake.mp3",
+      "durationMs": 7967,
+      "delayMs": 10000
+    },
+    {
+      "id": "marksman-close",
+      "clip": "marksman_close",
+      "file": "marksman-close.mp3",
+      "durationMs": 2717,
+      "delayMs": 800
+    },
+    {
+      "id": "pickpocket-wake",
+      "clip": "pickpocket_wake",
+      "file": "pickpocket-wake.mp3",
+      "durationMs": 8490,
+      "delayMs": 5000
+    },
+    {
+      "id": "pickpocket-close",
+      "clip": "pickpocket_close",
+      "file": "pickpocket-close.mp3",
+      "durationMs": 2299,
+      "delayMs": 800
+    },
+    {
+      "id": "gremlin-wake",
+      "clip": "gremlin_wake",
+      "file": "gremlin-wake.mp3",
+      "durationMs": 7027,
+      "delayMs": 5000
+    },
+    {
+      "id": "gremlin-close",
+      "clip": "gremlin_close",
+      "file": "gremlin-close.mp3",
+      "durationMs": 2769,
+      "delayMs": 800
+    },
+    {
+      "id": "auraseer-wake",
+      "clip": "auraseer_wake",
+      "file": "auraseer-wake.mp3",
+      "durationMs": 7576,
+      "delayMs": 5000
+    },
+    {
+      "id": "auraseer-thumbs",
+      "clip": "auraseer_thumbs",
+      "file": "auraseer-thumbs.mp3",
+      "durationMs": 3030,
+      "delayMs": 1200
+    },
+    {
+      "id": "auraseer-close",
+      "clip": "auraseer_close",
+      "file": "auraseer-close.mp3",
+      "durationMs": 2691,
+      "delayMs": 800
+    },
+    {
+      "id": "apptanner-wake",
+      "clip": "apptanner_wake",
+      "file": "apptanner-wake.mp3",
+      "durationMs": 6949,
+      "delayMs": 5000
+    },
+    {
+      "id": "tanner-thumb",
+      "clip": "tanner_thumb",
+      "file": "tanner-thumb.mp3",
+      "durationMs": 2743,
+      "delayMs": 1200
+    },
+    {
+      "id": "apptanner-close",
+      "clip": "apptanner_close",
+      "file": "apptanner-close.mp3",
+      "durationMs": 3004,
+      "delayMs": 800
+    },
+    {
+      "id": "oracle-wake",
+      "clip": "oracle_wake",
+      "file": "oracle-wake.mp3",
+      "durationMs": 4284,
+      "delayMs": 5000
+    },
+    {
+      "id": "oracle-close",
+      "clip": "oracle_close",
+      "file": "oracle-close.mp3",
+      "durationMs": 2377,
+      "delayMs": 800
+    },
+    {
+      "id": "alien-wake",
+      "clip": "alien_wake",
+      "file": "alien-wake.mp3",
+      "durationMs": 4780,
+      "delayMs": 5000
+    },
+    {
+      "id": "alien-close",
+      "clip": "alien_close",
+      "file": "alien-close.mp3",
+      "durationMs": 2795,
+      "delayMs": 800
+    },
+    {
+      "id": "cow-fistout",
+      "clip": "cow_fistout",
+      "file": "cow-fistout.mp3",
+      "durationMs": 9796,
+      "delayMs": 5000
+    },
+    {
+      "id": "cow-fistaway",
+      "clip": "cow_fistaway",
+      "file": "cow-fistaway.mp3",
+      "durationMs": 2168,
+      "delayMs": 1200
+    },
+    {
+      "id": "groobzerb-wake",
+      "clip": "groobzerb_wake",
+      "file": "groobzerb-wake.mp3",
+      "durationMs": 4571,
+      "delayMs": 5000
+    },
+    {
+      "id": "groobzerb-close",
+      "clip": "groobzerb_close",
+      "file": "groobzerb-close.mp3",
+      "durationMs": 3318,
+      "delayMs": 800
+    },
+    {
+      "id": "leader-wake",
+      "clip": "leader_wake",
+      "file": "leader-wake.mp3",
+      "durationMs": 4833,
+      "delayMs": 5000
+    },
+    {
+      "id": "leader-zerbgroob",
+      "clip": "leader_zerbgroob",
+      "file": "leader-zerbgroob.mp3",
+      "durationMs": 12852,
+      "delayMs": 5000
+    },
+    {
+      "id": "leader-close",
+      "clip": "leader_close",
+      "file": "leader-close.mp3",
+      "durationMs": 5094,
+      "delayMs": 800
+    },
+    {
+      "id": "nostradamus-wake",
+      "clip": "nostradamus_wake",
+      "file": "nostradamus-wake.mp3",
+      "durationMs": 16483,
+      "delayMs": 5000
+    },
+    {
+      "id": "nostradamus-close",
+      "clip": "nostradamus_close",
+      "file": "nostradamus-close.mp3",
+      "durationMs": 2691,
+      "delayMs": 800
+    },
+    {
+      "id": "psychic-wake",
+      "clip": "psychic_wake",
+      "file": "psychic-wake.mp3",
+      "durationMs": 1907,
+      "delayMs": 5000
+    },
+    {
+      "id": "psychic-close",
+      "clip": "psychic_close",
+      "file": "psychic-close.mp3",
+      "durationMs": 2273,
+      "delayMs": 800
+    },
+    {
+      "id": "rascal-wake",
+      "clip": "rascal_wake",
+      "file": "rascal-wake.mp3",
+      "durationMs": 2273,
+      "delayMs": 5000
+    },
+    {
+      "id": "rascal-close",
+      "clip": "rascal_close",
+      "file": "rascal-close.mp3",
+      "durationMs": 2821,
+      "delayMs": 800
+    },
+    {
+      "id": "exposer-wake",
+      "clip": "exposer_wake",
+      "file": "exposer-wake.mp3",
+      "durationMs": 2142,
+      "delayMs": 5000
+    },
+    {
+      "id": "exposer-close",
+      "clip": "exposer_close",
+      "file": "exposer-close.mp3",
+      "durationMs": 2638,
+      "delayMs": 800
+    },
+    {
+      "id": "empath-wake",
+      "clip": "empath_wake",
+      "file": "empath-wake.mp3",
+      "durationMs": 2168,
+      "delayMs": 5000
+    },
+    {
+      "id": "empath-close",
+      "clip": "empath_close",
+      "file": "empath-close.mp3",
+      "durationMs": 5068,
+      "delayMs": 800
+    },
+    {
+      "id": "mortician-wake",
+      "clip": "mortician_wake",
+      "file": "mortician-wake.mp3",
+      "durationMs": 2168,
+      "delayMs": 5000
+    },
+    {
+      "id": "mortician-close",
+      "clip": "mortician_close",
+      "file": "mortician-close.mp3",
+      "durationMs": 2691,
+      "delayMs": 800
+    },
+    {
+      "id": "bodysnatcher-wake",
+      "clip": "bodysnatcher_wake",
+      "file": "bodysnatcher-wake.mp3",
+      "durationMs": 3318,
+      "delayMs": 5000
+    },
+    {
+      "id": "bodysnatcher-close",
+      "clip": "bodysnatcher_close",
+      "file": "bodysnatcher-close.mp3",
+      "durationMs": 3291,
+      "delayMs": 800
+    },
+    {
+      "id": "supervillains-wake",
+      "clip": "supervillains_wake",
+      "file": "supervillains-wake.mp3",
+      "durationMs": 9430,
+      "delayMs": 5000
+    },
+    {
+      "id": "mirrorman-wake",
+      "clip": "mirrorman_wake",
+      "file": "mirrorman-wake.mp3",
+      "durationMs": 10501,
+      "delayMs": 5000
+    },
+    {
+      "id": "mirrorman-close",
+      "clip": "mirrorman_close",
+      "file": "mirrorman-close.mp3",
+      "durationMs": 2273,
+      "delayMs": 800
+    },
+    {
+      "id": "temptress-wake",
+      "clip": "temptress_wake",
+      "file": "temptress-wake.mp3",
+      "durationMs": 10371,
+      "delayMs": 5000
+    },
+    {
+      "id": "drpeeker-look",
+      "clip": "drpeeker_look",
+      "file": "drpeeker-look.mp3",
+      "durationMs": 6269,
+      "delayMs": 5000
+    },
+    {
+      "id": "rapscallion-wake",
+      "clip": "rapscallion_wake",
+      "file": "rapscallion-wake.mp3",
+      "durationMs": 8098,
+      "delayMs": 5000
+    },
+    {
+      "id": "evilometer-fistout-1",
+      "clip": "evilometer_fistout_1",
+      "file": "evilometer-fistout-1.mp3",
+      "durationMs": 6374,
+      "delayMs": 5000
+    },
+    {
+      "id": "evilometer-fistout-2",
+      "clip": "evilometer_fistout_2",
+      "file": "evilometer-fistout-2.mp3",
+      "durationMs": 10266,
+      "delayMs": 5000
+    },
+    {
+      "id": "evilometer-fistaway",
+      "clip": "evilometer_fistaway",
+      "file": "evilometer-fistaway.mp3",
+      "durationMs": 2664,
+      "delayMs": 1200
+    },
+    {
+      "id": "intern-wake-1",
+      "clip": "intern_wake_1",
+      "file": "intern-wake-1.mp3",
+      "durationMs": 11572,
+      "delayMs": 5000
+    },
+    {
+      "id": "intern-close",
+      "clip": "intern_close",
+      "file": "intern-close.mp3",
+      "durationMs": 2247,
+      "delayMs": 800
+    },
+    {
+      "id": "annoyinglad-wake",
+      "clip": "annoyinglad_wake",
+      "file": "annoyinglad-wake.mp3",
+      "durationMs": 7549,
+      "delayMs": 5000
+    },
+    {
+      "id": "annoyinglad-close",
+      "clip": "annoyinglad_close",
+      "file": "annoyinglad-close.mp3",
+      "durationMs": 4571,
+      "delayMs": 800
+    },
+    {
+      "id": "detector-wake",
+      "clip": "detector_wake",
+      "file": "detector-wake.mp3",
+      "durationMs": 9509,
+      "delayMs": 5000
+    },
+    {
+      "id": "detector-close",
+      "clip": "detector_close",
+      "file": "detector-close.mp3",
+      "durationMs": 6792,
+      "delayMs": 800
+    },
+    {
+      "id": "roleretriever-wake-1",
+      "clip": "roleretriever_wake_1",
+      "file": "roleretriever-wake-1.mp3",
+      "durationMs": 10057,
+      "delayMs": 5000
+    },
+    {
+      "id": "roleretriever-close",
+      "clip": "roleretriever_close",
+      "file": "roleretriever-close.mp3",
+      "durationMs": 5904,
+      "delayMs": 800
+    },
+    {
+      "id": "voodoolou-wake-1",
+      "clip": "voodoolou_wake_1",
+      "file": "voodoolou-wake-1.mp3",
+      "durationMs": 7471,
+      "delayMs": 5000
+    },
+    {
+      "id": "voodoolou-close",
+      "clip": "voodoolou_close",
+      "file": "voodoolou-close.mp3",
+      "durationMs": 2952,
+      "delayMs": 800
+    },
+    {
+      "id": "switcheroo-wake",
+      "clip": "switcheroo_wake",
+      "file": "switcheroo-wake.mp3",
+      "durationMs": 8647,
+      "delayMs": 5000
+    },
+    {
+      "id": "switcheroo-close",
+      "clip": "switcheroo_close",
+      "file": "switcheroo-close.mp3",
+      "durationMs": 2299,
+      "delayMs": 800
+    },
+    {
+      "id": "selfawarenessgirl-wake",
+      "clip": "selfawarenessgirl_wake",
+      "file": "selfawarenessgirl-wake.mp3",
+      "durationMs": 5721,
+      "delayMs": 5000
+    },
+    {
+      "id": "selfawarenessgirl-close",
+      "clip": "selfawarenessgirl_close",
+      "file": "selfawarenessgirl-close.mp3",
+      "durationMs": 5277,
+      "delayMs": 800
+    },
+    {
+      "id": "flipper-wake",
+      "clip": "flipper_wake",
+      "file": "flipper-wake.mp3",
+      "durationMs": 9378,
+      "delayMs": 5000
+    },
+    {
+      "id": "flipper-close",
+      "clip": "flipper_close",
+      "file": "flipper-close.mp3",
+      "durationMs": 2064,
+      "delayMs": 800
+    },
+    {
+      "id": "supervillains-close",
+      "clip": "supervillains_close",
+      "file": "supervillains-close.mp3",
+      "durationMs": 4571,
+      "delayMs": 800
+    },
+    {
+      "id": "everyone-wake",
+      "clip": "everyone_wake",
+      "file": "everyone-wake.mp3",
+      "durationMs": 2168,
+      "delayMs": 400
+    }
+  ]
+}

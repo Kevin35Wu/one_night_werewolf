@@ -2,3 +2,9 @@ server/node_modules/
 server/.wrangler/
 .DS_Store
 Thumbs.db
+vendor/
+*.apk
+.cursor/
+_tmp*/
+icon/**/*.zip
+一夜終極系列規則書.pdf

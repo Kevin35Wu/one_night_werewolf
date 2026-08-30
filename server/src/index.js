@@ -1,7 +1,9 @@
 import "../../js/roles.js";
+import "../../js/script.js";
 import "../../js/game.js";
 
 const Game = globalThis.WerewolfGame;
+const LOBBY_PURGE_MS = 45000;
 
 function okOrigin(origin) {
   if (!origin) return true;
@@ -41,6 +43,28 @@ function cors(res, request) {
   headers.set("Access-Control-Allow-Headers", "Content-Type");
   headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   return new Response(res.body, { status: res.status, headers });
+}
+
+function emptyRoom(clientId, name) {
+  return {
+    hostId: clientId,
+    members: [{ id: clientId, name, ready: false }],
+    expansion: "base",
+    counts: Game.defaultCounts(),
+    settings: {
+      dusk: false,
+      artifacts: false,
+      shield: false,
+      alphaWolf: false,
+      artifactIds: globalThis.WerewolfData.ARTIFACTS.map((a) => a.id),
+    },
+    game: null,
+    screen: "lobby",
+  };
+}
+
+function inLobby(data) {
+  return !data.game || data.screen === "lobby";
 }
 
 export class Room {
@@ -93,11 +117,46 @@ export class Room {
   }
 
   async webSocketClose(ws) {
-    await this.enqueue(() => this.broadcast());
+    await this.enqueue(() => this.onDisconnect());
   }
 
   async webSocketError(ws) {
-    await this.enqueue(() => this.broadcast());
+    await this.enqueue(() => this.onDisconnect());
+  }
+
+  async alarm() {
+    await this.enqueue(() => this.onAlarm());
+  }
+
+  async onAlarm() {
+    const data = await this.load();
+    if (!data) return;
+    const j = data.game && data.game.judge;
+    if (j && j.running) {
+      const r = Game.judgeTimeout(data.game, Date.now(), 150);
+      if (r && r.waiting && j.deadlineAt) {
+        try {
+          await this.ctx.storage.setAlarm(j.deadlineAt);
+        } catch (_) {}
+        return;
+      }
+      await this.save(data);
+      await this.broadcast();
+      await this.scheduleNextAlarm(data);
+      return;
+    }
+    if (inLobby(data)) await this.purgeDisconnectedLobby();
+  }
+
+  async scheduleNextAlarm(data) {
+    const j = data.game && data.game.judge;
+    if (j && j.running && j.deadlineAt) {
+      try {
+        await this.ctx.storage.setAlarm(j.deadlineAt);
+      } catch (_) {}
+      return;
+    }
+    if (inLobby(data)) await this.scheduleLobbyPurge();
   }
 
   async load() {
@@ -131,7 +190,38 @@ export class Room {
     this.send(ws, { type: "error", message });
   }
 
-  publicState(data) {
+  closeSocket(ws, code, reason) {
+    try {
+      ws.close(code, reason);
+    } catch (_) {}
+  }
+
+  closeClient(clientId, code, reason) {
+    for (const ws of this.sockets()) {
+      const att = ws.deserializeAttachment() || {};
+      if (att.clientId === clientId) this.closeSocket(ws, code, reason);
+    }
+  }
+
+  ensureHost(data) {
+    const connected = this.connectedIds();
+    if (connected.includes(data.hostId)) return false;
+    const next = data.members.find((m) => connected.includes(m.id));
+    if (next) {
+      data.hostId = next.id;
+      return true;
+    }
+    return false;
+  }
+
+  viewFor(ws, data) {
+    const att = ws.deserializeAttachment() || {};
+    const clientId = att.clientId;
+    const recap = data.screen === "recap";
+    const seatIndex =
+      data.game && data.game.seatIds ? data.game.seatIds.indexOf(clientId) : -1;
+    const game = data.game ? Game.censorGame(data.game, { recap, seatIndex }) : null;
+    const priv = data.game && !recap ? Game.privateInfo(data.game, seatIndex) : null;
     return {
       hostId: data.hostId,
       members: data.members,
@@ -139,70 +229,93 @@ export class Room {
       expansion: data.expansion,
       counts: data.counts,
       settings: data.settings,
-      game: data.game,
+      game,
       screen: data.screen,
+      private: priv,
+      cardSeen: (data.game && data.game.cardSeen) || {},
     };
   }
 
   async broadcast() {
     const data = await this.load();
     if (!data) return;
-    const payload = JSON.stringify({ type: "state", state: this.publicState(data) });
     for (const ws of this.sockets()) {
       try {
-        ws.send(payload);
+        ws.send(JSON.stringify({ type: "state", state: this.viewFor(ws, data) }));
       } catch (_) {}
+    }
+  }
+
+  async scheduleLobbyPurge() {
+    try {
+      await this.ctx.storage.setAlarm(Date.now() + LOBBY_PURGE_MS);
+    } catch (_) {}
+  }
+
+  async onDisconnect() {
+    const data = await this.load();
+    if (!data) return;
+    this.ensureHost(data);
+    await this.save(data);
+    if (inLobby(data)) await this.scheduleLobbyPurge();
+    await this.broadcast();
+  }
+
+  async purgeDisconnectedLobby() {
+    const data = await this.load();
+    if (!data || !inLobby(data)) return;
+    const connected = new Set(this.connectedIds());
+    const before = data.members.length;
+    data.members = data.members.filter((m) => connected.has(m.id));
+    this.ensureHost(data);
+    if (data.members.length !== before) {
+      await this.save(data);
+      await this.broadcast();
     }
   }
 
   async onConnect(ws, { clientId, name, create }) {
     let data = await this.load();
-    if (!data) {
+    if (!data || !data.members || data.members.length === 0) {
       if (!create) {
         this.errorTo(ws, "房間不存在");
-        try {
-          ws.close(4000, "missing");
-        } catch (_) {}
+        this.closeSocket(ws, 4000, "missing");
         return;
       }
-      data = {
-        hostId: clientId,
-        members: [{ id: clientId, name }],
-        expansion: "base",
-        counts: Game.defaultCounts(),
-        settings: {
-          dusk: false,
-          artifacts: false,
-          shield: false,
-          alphaWolf: false,
-          artifactIds: globalThis.WerewolfData.ARTIFACTS.map((a) => a.id),
-        },
-        game: null,
-        screen: "lobby",
-      };
+      data = emptyRoom(clientId, name);
       await this.save(data);
       await this.broadcast();
+      return;
+    }
+
+    if (create && data.members.length > 0) {
+      this.errorTo(ws, "房號已被使用");
+      this.closeSocket(ws, 4004, "taken");
       return;
     }
 
     const existing = data.members.find((m) => m.id === clientId);
     if (existing) {
       existing.name = name;
+      if (existing.ready == null) existing.ready = false;
+    } else if (!inLobby(data)) {
+      this.errorTo(ws, "遊戲進行中");
+      this.closeSocket(ws, 4005, "playing");
+      return;
+    } else if (data.members.length >= 12) {
+      this.errorTo(ws, "房間已滿");
+      this.closeSocket(ws, 4001, "full");
+      return;
     } else {
-      if (data.game && data.screen !== "lobby") {
-        data.members.push({ id: clientId, name });
-      } else if (data.members.length >= 12) {
-        this.errorTo(ws, "房間已滿");
-        try {
-          ws.close(4001, "full");
-        } catch (_) {}
-        return;
-      } else {
-        data.members.push({ id: clientId, name });
-      }
+      data.members.push({ id: clientId, name, ready: false });
     }
+    this.ensureHost(data);
     await this.save(data);
     await this.broadcast();
+  }
+
+  findMember(data, clientId) {
+    return data.members.find((m) => m.id === clientId);
   }
 
   async onMessage(ws, att, msg) {
@@ -218,7 +331,7 @@ export class Room {
         this.errorTo(ws, "只有房主可以改設置");
         return;
       }
-      if (data.game && data.screen !== "lobby") {
+      if (!inLobby(data)) {
         this.errorTo(ws, "開局後不能改設置");
         return;
       }
@@ -230,9 +343,173 @@ export class Room {
       return;
     }
 
+    if (msg.type === "ready") {
+      if (!inLobby(data)) return;
+      const m = this.findMember(data, att.clientId);
+      if (!m) return;
+      m.ready = !!msg.ready;
+      await this.save(data);
+      await this.broadcast();
+      return;
+    }
+
+    if (msg.type === "cardSeen") {
+      if (!data.game || data.game.phase !== "looking") {
+        this.errorTo(ws, "現在不是看牌階段");
+        return;
+      }
+      if (!data.game.cardSeen) data.game.cardSeen = {};
+      data.game.cardSeen[att.clientId] = true;
+      await this.save(data);
+      await this.broadcast();
+      return;
+    }
+
+    if (msg.type === "leave") {
+      if (inLobby(data)) {
+        data.members = data.members.filter((m) => m.id !== att.clientId);
+        this.ensureHost(data);
+        await this.save(data);
+        await this.broadcast();
+      }
+      this.closeSocket(ws, 4002, "left");
+      return;
+    }
+
+    if (msg.type === "kick") {
+      if (!isHost) {
+        this.errorTo(ws, "只有房主可以踢人");
+        return;
+      }
+      if (!inLobby(data)) {
+        this.errorTo(ws, "開局後不能踢人");
+        return;
+      }
+      const targetId = String(msg.targetId || "");
+      if (!targetId || targetId === data.hostId) {
+        this.errorTo(ws, "不能踢房主");
+        return;
+      }
+      if (!this.findMember(data, targetId)) {
+        this.errorTo(ws, "找不到這位玩家");
+        return;
+      }
+      data.members = data.members.filter((m) => m.id !== targetId);
+      await this.save(data);
+      await this.broadcast();
+      this.closeClient(targetId, 4003, "kicked");
+      return;
+    }
+
+    if (msg.type === "transfer") {
+      if (!isHost) {
+        this.errorTo(ws, "只有房主可以移交");
+        return;
+      }
+      const targetId = String(msg.targetId || "");
+      const target = this.findMember(data, targetId);
+      if (!target) {
+        this.errorTo(ws, "找不到這位玩家");
+        return;
+      }
+      if (!this.connectedIds().includes(target.id)) {
+        this.errorTo(ws, "對方不在線");
+        return;
+      }
+      data.hostId = target.id;
+      await this.save(data);
+      await this.broadcast();
+      return;
+    }
+
+    if (msg.type === "moveSeat") {
+      if (!isHost) {
+        this.errorTo(ws, "只有房主可以換座位");
+        return;
+      }
+      if (!inLobby(data)) {
+        this.errorTo(ws, "開局後不能換座位");
+        return;
+      }
+      const a = Number(msg.a);
+      const b = Number(msg.b);
+      if (
+        a === b ||
+        !Number.isInteger(a) ||
+        !Number.isInteger(b) ||
+        a < 0 ||
+        b < 0 ||
+        a >= data.members.length ||
+        b >= data.members.length
+      ) {
+        this.errorTo(ws, "座位無效");
+        return;
+      }
+      const tmp = data.members[a];
+      data.members[a] = data.members[b];
+      data.members[b] = tmp;
+      await this.save(data);
+      await this.broadcast();
+      return;
+    }
+
+    if (msg.type === "vote") {
+      if (!data.game) {
+        this.errorTo(ws, "還沒發牌");
+        return;
+      }
+      const seat = (data.game.seatIds || []).indexOf(att.clientId);
+      const r = Game.castVote(data.game, seat, Number(msg.targetIndex));
+      if (r.error) {
+        this.errorTo(ws, r.error);
+        return;
+      }
+      if (Game.allVoted(data.game)) {
+        Game.resolveVotes(data.game);
+        data.screen = "recap";
+      }
+      await this.save(data);
+      await this.broadcast();
+      return;
+    }
+
+    if (msg.type === "tally") {
+      if (!isHost) {
+        this.errorTo(ws, "只有房主可以開票");
+        return;
+      }
+      if (!data.game) {
+        this.errorTo(ws, "還沒發牌");
+        return;
+      }
+      const r = Game.resolveVotes(data.game);
+      if (r.error) {
+        this.errorTo(ws, r.error);
+        return;
+      }
+      data.screen = "recap";
+      await this.save(data);
+      await this.broadcast();
+      return;
+    }
+
     if (msg.type === "deal") {
       if (!isHost) {
         this.errorTo(ws, "只有房主可以發牌");
+        return;
+      }
+      if (!inLobby(data)) {
+        this.errorTo(ws, "已經開局");
+        return;
+      }
+      const connected = this.connectedIds();
+      const offline = data.members.filter((m) => !connected.includes(m.id));
+      if (offline.length) {
+        this.errorTo(ws, "還有人離線，請先踢人或等重連");
+        return;
+      }
+      if (data.members.some((m) => !m.ready)) {
+        this.errorTo(ws, "還有人尚未準備");
         return;
       }
       const names = data.members.map((m) => m.name);
@@ -259,8 +536,14 @@ export class Room {
         this.errorTo(ws, "只有房主可以再來一局");
         return;
       }
+      const connected = new Set(this.connectedIds());
       data.game = null;
       data.screen = "lobby";
+      data.members = data.members.filter((m) => connected.has(m.id));
+      data.members.forEach((m) => {
+        m.ready = false;
+      });
+      this.ensureHost(data);
       await this.save(data);
       await this.broadcast();
       return;
@@ -271,6 +554,43 @@ export class Room {
         this.errorTo(ws, "還沒發牌");
         return;
       }
+      if (msg.action && (msg.action.type === "judgeTimeout" || msg.action.type === "judgeDone")) {
+        this.errorTo(ws, "流程由伺服器計時");
+        return;
+      }
+      if (msg.action && msg.action.type === "judgeStart" && att.clientId !== data.hostId) {
+        this.errorTo(ws, "只有房主可以開始主持");
+        return;
+      }
+      if (msg.action && msg.action.type === "script" && att.clientId !== data.hostId) {
+        this.errorTo(ws, "只有房主可以換字幕");
+        return;
+      }
+      if (msg.action && msg.action.type === "setPhase" && att.clientId !== data.hostId) {
+        this.errorTo(ws, "只有房主可以推進流程");
+        return;
+      }
+      if (msg.action && (msg.action.type === "judgeStart" || msg.action.type === "script")) {
+        msg.action.now = Date.now();
+        msg.action.syncDelay = 150;
+      }
+      const BOARD_ACT = {
+        swap: 1,
+        flip: 1,
+        rotate: 1,
+        shield: 1,
+        placeMark: 1,
+        swapMark: 1,
+        placeArtifact: 1,
+        look: 1,
+        lookMark: 1,
+        lookArtifact: 1,
+        undo: 1,
+      };
+      if (msg.action && BOARD_ACT[msg.action.type]) {
+        const ids = data.game.seatIds || [];
+        msg.action.actorSeat = ids.indexOf(att.clientId);
+      }
       const r = Game.applyAction(data.game, msg.action);
       if (r.error) {
         this.errorTo(ws, r.error);
@@ -278,11 +598,15 @@ export class Room {
       }
       if (msg.action.type === "setPhase") {
         if (msg.action.phase === "day") data.screen = "day";
+        else if (msg.action.phase === "voting") data.screen = "voting";
         else if (msg.action.phase === "recap") data.screen = "recap";
+        else if (msg.action.phase === "looking") data.screen = "viewCards";
         else data.screen = "table";
       }
       await this.save(data);
       await this.broadcast();
+      await this.scheduleNextAlarm(data);
+      if (r.peek) this.send(ws, { type: "peek", peek: r.peek });
     }
   }
 }

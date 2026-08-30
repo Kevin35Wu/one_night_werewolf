@@ -18,8 +18,18 @@
     { id: "bonus", name: "角色擴充" },
   ];
 
+  // APK cards.png / cards2–4 切出的立繪；缺圖角色不設 icon，UI 會退回 emoji
+  const ROLE_ART_MISSING = {
+    leader: true, // cards3 無 Leader 官方圖
+    defenderer: true, // cards4 無 Defender-er
+  };
+
   function role(id, name, expansion, team, emoji, max = 1, extra = {}) {
-    return { id, name, expansion, team, emoji, max, ...extra };
+    const base = { id, name, expansion, team, emoji, max };
+    if (!ROLE_ART_MISSING[id] && extra.icon !== false) {
+      base.icon = "img/roles/" + id + ".png";
+    }
+    return { ...base, ...extra };
   }
 
   const ROLES = [
